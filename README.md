@@ -1,4 +1,4 @@
-# Gitlab Cisco Webex
+# Gitlab Cisco Webex teams
 
 webhook endpoint for gitlab and cisco webex teams
 
