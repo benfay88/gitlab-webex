@@ -3,14 +3,16 @@
 webhook endpoint for gitlab and cisco webex teams
 
 # Installation
-
 Start by creating a bot at [Cisco Webex for Developers](https://developer.webex.com)
+
 Invite your bot to the desired Webex team room
 
 Both `SPARK_ROOM` and `SPARK_ACCESS_TOKEN` must be exported as environment variables
+
 ```
-export SPARK_ROOM=<your room id>
-export SPARK_ACCESS_TOKEN=<Your BOT TOKEN>
+$ export SPARK_ROOM=<your room id>
+$ export SPARK_ACCESS_TOKEN=<Your BOT TOKEN>
+```
 
 ### From Source
 ```python
