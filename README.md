@@ -25,7 +25,7 @@ python app.py
 ### Using Docker
 Build the image from Dockerfile
 ```
-docker run -p 5000:5000 <Image-Name>
+docker build -p 5000:5000 <Image-Name>
 ```
 
 Run docker container
