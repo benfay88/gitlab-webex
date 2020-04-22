@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import sys
 
 def event_handler(msg):
     """
@@ -18,7 +19,6 @@ def event_handler(msg):
         'build': builds_formatter,
         'merge_request': merge_request_formatter
     }
-
     object_kind = msg['object_kind']
     message = handler_map[object_kind](msg)
     return message
@@ -27,7 +27,7 @@ def event_handler(msg):
 def push_formatter(msg):
     message = "### {} just pushed commits(s) in [{}]({})\n".format(msg['user'],
                                                                    msg['project']['path_with_namespace'],
-                                                                   msg['project']['git_http_url']),                                              
+                                                                   msg['project']['git_http_url'])                                             
     for commit in msg['commits']:
         commit = commit['message']
         commit = commit.encode('utf-8')
@@ -42,7 +42,7 @@ def issue_formatter(msg):
     message = "###{} just {} an issue in [{}]({})\n".format(msg['user']['username'],
                                                         issue['state'],
                                                         msg['project']['path_with_namespace'], 
-                                                        msg['project']['git_http_url'])
+                                                        msg['project']['git_http_url'])                                                   
     message += "> *[{}]({})*\n".format(title, issue['url'])
     if msg['labels']:
         message += " : Labels: "
@@ -78,16 +78,22 @@ def note_formatter(msg):
     repo = msg['project']['path_with_namespace']
     note = msg['object_attributes']['note']
     note = note.encode('utf-8')
+    note_type = msg['object_attributes']['noteable_type']
     note_url = msg['object_attributes']['url']
     user = msg['user']['username']
-    issue = msg['issue']['iid']
 
-
-    sparkmsg = ""
-    sparkmsg += "### {} commented on issue [{}]({}) in {}".format(user, issue, note_url, repo)
-    sparkmsg += "\n\n> {}".format(note)
-
-    return sparkmsg
+    if note_type == "Issue":
+        issue = msg['issue']['iid']
+        sparkmsg = ""
+        sparkmsg += "### {} commented on issue [{}]({}) in {}".format(user, issue, note_url, repo)
+        sparkmsg += "\n\n> {}".format(note)
+        return sparkmsg
+    elif note_type == "MergeRequest":
+        merge = msg['merge_request']['iid']
+        sparkmsg = ""
+        sparkmsg += "### {} commented on merge request [{}]({})".format(user, merge, note_url)
+        sparkmsg += "\n\n> {}".format(note)
+        return sparkmsg
 
 # Build function
 def builds_formatter(msg):
